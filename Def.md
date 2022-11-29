@@ -1,14 +1,13 @@
-Statement := Assignment
+Statement := (Assignment) ";"
 
 Assignment := Variable "=" Expression
 
-Expression := Primitive | Set | Operation | Variable
+Expression := Set | Operation | Variable
 
-Primitive := "{}"
+Set := "{""}"
 
-Operations := Union | Intersection | without | Equality
+Operations := Union | Intersection | without
 
 Union := Expression + Expression
-Intersection := Expression i Expression
+Intersection := Expression * Expression
 without := Expression / Expression
-Equality := Expression == Expression
