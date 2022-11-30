@@ -17,30 +17,24 @@ class Parser:
         tokens = tokens[1:]
 
         elements = []
+        comma_count = 0
         while True:
             next_token = tokens[0]
 
             if next_token.content == ",":
-                if len(elements) < 0:
-                    raise ValueError()
-                tokens = tokens[1:]
-                element, tokens = Parser.parse_set(tokens)
-                elements.append(element)
-                return Set(elements), tokens
-            elif next_token.content == "{":
+                if comma_count > 0:
+                    raise ValueError("Too many commas in set")
                 if len(elements) == 0:
-                    element, tokens = Parser.parse_set(tokens)
-                    next_token = tokens[0]
-                    if next_token.content != "}":
-                        raise ValueError()
-                    elements.append(element)
-                    return Set(elements), tokens[1:]
-                else:
                     raise ValueError()
+
+                comma_count += 1
+                tokens = tokens[1:]
             elif next_token.content == "}":
                 return Set(elements), tokens[1:]
             else:
-                raise ValueError()
+                comma_count = 0
+                element, tokens = Parser.parse_expression(tokens)
+                elements.append(element)
 
     @staticmethod
     def parse_expression(tokens):
@@ -54,15 +48,15 @@ class Parser:
             raise ValueError()
 
         next_token = tokens[0]
-        if next_token.content == "+":
+        if next_token.content == "|":
             tokens = tokens[1:]
             rhs, tokens = Parser.parse_expression(tokens)
             return Union(lhs, rhs), tokens
-        elif next_token.content == "*":
+        elif next_token.content == "&":
             tokens = tokens[1:]
             rhs, tokens = Parser.parse_expression(tokens)
             return Intersection(lhs, rhs), tokens
-        elif next_token.content == "/":
+        elif next_token.content == "-":
             tokens = tokens[1:]
             rhs, tokens = Parser.parse_expression(tokens)
             return Difference(lhs, rhs), tokens
