@@ -4,6 +4,7 @@ from set_ast.expression.Variable import Variable
 from set_ast.expression.operation.union import Union
 from set_ast.expression.operation.intersection import Intersection
 from set_ast.expression.operation.difference import Difference
+from set_ast.expression.operation.equality import Equality
 from set_ast.set_ast import SetAst
 
 
@@ -60,6 +61,10 @@ class Parser:
             tokens = tokens[1:]
             rhs, tokens = Parser.parse_expression(tokens)
             return Difference(lhs, rhs), tokens
+        elif next_token.content == "==":
+            tokens = tokens[1:]
+            rhs, tokens = Parser.parse_expression(tokens)
+            return Equality(lhs, rhs), tokens
         else:
             return lhs, tokens
 

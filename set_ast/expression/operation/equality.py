@@ -1,7 +1,4 @@
-from set_ast.node import Node
-
-
-class Union(Node):
+class Equality:
 
     def __init__(self, lhs, rhs):
         self.lhs = lhs
@@ -11,4 +8,4 @@ class Union(Node):
         env, lhs_val = self.lhs.execute(env)
         env, rhs_val = self.rhs.execute(env)
 
-        return env, lhs_val | rhs_val
+        return env, frozenset() if lhs_val == rhs_val else frozenset([frozenset()])

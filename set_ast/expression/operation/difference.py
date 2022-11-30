@@ -1,4 +1,7 @@
-class Difference:
+from set_ast.node import Node
+
+
+class Difference(Node):
 
     def __init__(self, lhs, rhs):
         self.lhs = lhs

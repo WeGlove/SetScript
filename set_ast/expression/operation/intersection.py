@@ -1,4 +1,7 @@
-class Intersection:
+from set_ast.node import Node
+
+
+class Intersection(Node):
 
     def __init__(self, lhs, rhs):
         self.lhs = lhs
