@@ -4,10 +4,11 @@ Assignment := Variable "=" Expression
 
 Expression := Set | Operation | Variable
 
-Set := "{""}"
+Set := "{"[Expression \[, Expression\]\*]*"}"
 
-Operations := Union | Intersection | without
+Operations := Union | Intersection | Difference | In
 
-Union := Expression + Expression
-Intersection := Expression * Expression
-without := Expression / Expression
+Union := Expression | Expression
+Intersection := Expression & Expression
+Difference := Expression - Expression
+In := Expression "in" Expression

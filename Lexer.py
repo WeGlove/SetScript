@@ -3,26 +3,52 @@ from Token import Token
 
 class Lexer:
 
-    keywords = ["{", "}", "|", "=", "&", "==", ",", "-", ";"]
+    keywords = ["{", "}", "|", "=", "&", "==", ",", "-", ";", "in"]
     whitespace = [" ", "\n", "\t", "\r"]
+
+    @staticmethod
+    def lex_keyword(line, line_number):
+        possible_key_words = list(Lexer.keywords)
+
+        chain = ""
+        matches = []
+        for i in range(len(line)):
+            char = line[i]
+            chain += char
+            possible_key_words = [word for word in possible_key_words if word.startswith(chain)]
+            matches.extend([word for word in possible_key_words if word == chain])
+
+            if len(possible_key_words) == 0:
+                break
+
+        if len(matches) == 0:
+            raise ValueError
+
+        out = max(matches, key=lambda x: len(x))
+
+        return Token("Symbol", out, line_number), line[len(out):]
 
     @staticmethod
     def lex_line(line, line_number):
         tokens = []
 
         word = ""
-        for i in range(len(line)):
-            if line[i] in Lexer.whitespace:
+        while len(line) > 0:
+            char = line[0]
+            if char in Lexer.whitespace:
                 if len(word) > 0:
                     tokens.append(Token("Word", word, line_number))
                     word = ""
-            elif line[i] in Lexer.keywords:
+                line = line[1:]
+            elif char in Lexer.keywords:
                 if len(word) > 0:
                     tokens.append(Token("Word", word, line_number))
                     word = ""
-                tokens.append(Token("Symbol", line[i], line_number))
+                token, line = Lexer.lex_keyword(line, line_number)
+                tokens.append(token)
             else:
-                word += line[i]
+                word += line[0]
+                line = line[1:]
         return tokens
 
     @staticmethod
