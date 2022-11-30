@@ -5,6 +5,7 @@ from set_ast.expression.operation.union import Union
 from set_ast.expression.operation.intersection import Intersection
 from set_ast.expression.operation.difference import Difference
 from set_ast.expression.operation.equality import Equality
+from set_ast.statement.while_loop import WhileLoop
 from set_ast.set_ast import SetAst
 
 
@@ -82,8 +83,28 @@ class Parser:
         return assignment, tokens
 
     @staticmethod
+    def parse_while(tokens):
+        token_while = tokens[0]
+        token_bracket_open = tokens[1]
+        tokens = tokens[2:]
+        condition, tokens = Parser.parse_expression(tokens)
+        token_bracket_close = tokens[0]
+        token_curl_open = tokens[1]
+        tokens = tokens[2:]
+        statements = []
+        while tokens[0].content != "}":
+            statement, tokens = Parser.parse_statement(tokens)
+            statements.append(statement)
+        tokens = tokens[1:]
+
+        return WhileLoop(condition, statements), tokens
+
+    @staticmethod
     def parse_statement(tokens):
-        assignment, tokens = Parser.parse_assignment(tokens)
+        if tokens[0].content == "while":
+            assignment, tokens = Parser.parse_while(tokens)
+        else:
+            assignment, tokens = Parser.parse_assignment(tokens)
         token = tokens[0]
         if token.content == ";":
             return assignment, tokens[1:]
