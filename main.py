@@ -9,5 +9,5 @@ if __name__ == "__main__":
         print(tokens)
         ast = Parser.parse(tokens)
         print(ast)
-        env = ast.execute({})[0]
+        env = ast.execute()[0]
         print(env)

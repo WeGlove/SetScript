@@ -7,6 +7,10 @@ from set_ast.expression.operation.difference import Difference
 from set_ast.expression.operation.equality import Equality
 from set_ast.statement.while_loop import WhileLoop
 from set_ast.set_ast import SetAst
+from set_ast.expression.operation.In import In
+from set_ast.statement.stmt_return import StmtReturn
+from set_ast.statement.function import Function
+from set_ast.expression.function_call import FunctionCall
 
 
 class Parser:
@@ -39,13 +43,47 @@ class Parser:
                 elements.append(element)
 
     @staticmethod
+    def parse_function_call(tokens):
+        identifier = tokens[0]
+        tokens = tokens[1:]
+
+        token_open = tokens[0]
+        if token_open.content != "(":
+            raise ValueError()
+        tokens = tokens[1:]
+
+        expressions = []
+        comma_count = 0
+        while True:
+            next_token = tokens[0]
+
+            if next_token.content == ",":
+                if comma_count > 0:
+                    raise ValueError("Too many commas in set")
+                if len(expressions) == 0:
+                    raise ValueError()
+
+                comma_count += 1
+                tokens = tokens[1:]
+            elif next_token.content == ")":
+                return FunctionCall(Variable(identifier.content), expressions), tokens[1:]
+            else:
+                comma_count = 0
+                expression, tokens = Parser.parse_expression(tokens)
+                expressions.append(expression)
+
+    @staticmethod
     def parse_expression(tokens):
         next_token = tokens[0]
 
         if next_token.content == "{":
             lhs, tokens = Parser.parse_set(tokens)
         elif next_token.type == "Word":
-            lhs, tokens = Variable(next_token.content), tokens[1:]
+            over_next_token = tokens[1]
+            if over_next_token.content == "(":
+                lhs, tokens = Parser.parse_function_call(tokens)
+            else:
+                lhs, tokens = Variable(next_token.content), tokens[1:]
         else:
             raise ValueError()
 
@@ -66,6 +104,11 @@ class Parser:
             tokens = tokens[1:]
             rhs, tokens = Parser.parse_expression(tokens)
             return Equality(lhs, rhs), tokens
+        elif next_token.content == "in":
+            tokens = tokens[1:]
+            rhs, tokens = Parser.parse_expression(tokens)
+            return In(lhs, rhs), tokens
+
         else:
             return lhs, tokens
 
@@ -100,14 +143,73 @@ class Parser:
         return WhileLoop(condition, statements), tokens
 
     @staticmethod
+    def parse_function_parameters(tokens):
+        token_open = tokens[0]
+        if token_open.content != "(":
+            raise ValueError()
+        tokens = tokens[1:]
+
+        identifiers = []
+        comma_count = 0
+        while True:
+            next_token = tokens[0]
+
+            if next_token.content == ",":
+                if comma_count > 0:
+                    raise ValueError("Too many commas in set")
+                if len(identifiers) == 0:
+                    raise ValueError()
+
+                comma_count += 1
+                tokens = tokens[1:]
+            elif next_token.content == ")":
+                return identifiers, tokens[1:]
+            else:
+                comma_count = 0
+                tokens = tokens[1:]
+                identifiers.append(Variable(next_token.content))
+
+    @staticmethod
+    def parse_function_body(tokens):
+        bracket_open = tokens[0]
+        tokens = tokens[1:]
+
+        statements = []
+        while True:
+            next_token = tokens[0]
+            if next_token.content == "}":
+                return statements, tokens[1:]
+            else:
+                statement, tokens = Parser.parse_statement(tokens)
+                statements.append(statement)
+
+    @staticmethod
+    def parse_function(tokens):
+        def_token = tokens[0]
+        identifier_token = tokens[1]
+        tokens = tokens[2:]
+        identifiers, tokens = Parser.parse_function_parameters(tokens)
+        statements, tokens = Parser.parse_function_body(tokens)
+
+        return Function(Variable(identifier_token.content), [identifier.name for identifier in identifiers], statements), tokens
+
+
+    @staticmethod
     def parse_statement(tokens):
-        if tokens[0].content == "while":
-            assignment, tokens = Parser.parse_while(tokens)
+        token = tokens[0]
+        if token.content == "while":
+            statement, tokens = Parser.parse_while(tokens)
+        elif token.content == "def":
+            statement, tokens = Parser.parse_function(tokens)
+        elif token.content == "return":
+            expr, tokens = Parser.parse_expression(tokens[1:])
+            statement = StmtReturn(expr)
         else:
-            assignment, tokens = Parser.parse_assignment(tokens)
+            statement, tokens = Parser.parse_assignment(tokens)
+
         token = tokens[0]
         if token.content == ";":
-            return assignment, tokens[1:]
+            return statement, tokens[1:]
         else:
             raise ValueError("Missing Semicolon")
 

@@ -3,7 +3,7 @@ from Token import Token
 
 class Lexer:
 
-    keywords = ["{", "}", "|", "=", "&", "==", ",", "-", ";", "in", "while", "(", ")"]
+    keywords = ["{", "}", "|", "=", "&", "==", ",", "-", ";", "in", "while", "(", ")", "def", "return"]
     whitespace = [" ", "\n", "\t", "\r"]
 
     @staticmethod

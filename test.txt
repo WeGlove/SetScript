@@ -1,5 +1,4 @@
-
-
-while({}){
-    A = {};
+def f(A){
+    return {A};
 };
+B = f(f(f(f({}))));
