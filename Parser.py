@@ -64,6 +64,14 @@ class Parser:
         return FunctionCall(Variable(identifier.content), expressions), tokens
 
     @staticmethod
+    def parse_parentheses(tokens):
+        token_open = tokens[0]
+        expression, tokens = Parser.parse_expression(tokens[1:])
+        token_close = tokens[0]
+
+        return expression, tokens[1:]
+
+    @staticmethod
     def parse_expression(tokens):
         next_token = tokens[0]
 
@@ -71,6 +79,8 @@ class Parser:
             lhs, tokens = Parser.parse_set(tokens)
         elif next_token.content == "<":
             lhs, tokens = Parser.parse_Tuple(tokens)
+        elif next_token.content == "(":
+            lhs, tokens = Parser.parse_parentheses(tokens)
         elif next_token.type == "Identifier":
             over_next_token = tokens[1]
             if over_next_token.content == "(":

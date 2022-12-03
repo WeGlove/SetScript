@@ -7,10 +7,11 @@
 - Return := "return" Expression
 
 ## Expressions
-- Expression := Set | Operation | Variable
+- Expression := Set | Operation | Variable | Parentheses
 - Set := "{"[Expression \[, Expression\]\*]*"}"
 - Function_Call := Identifier
 - Tuple := "<"[Expression \[, Expression\]\*]*">"
+- Parenthesis := "(" Expression ")"
 
 ### Operations
 - Operations := Union | Intersection | Difference | In | Equality | Inequality
