@@ -18,9 +18,9 @@ from set_ast.expression.function_call import FunctionCall
 class Parser:
 
     @staticmethod
-    def parse_set(tokens):
+    def parse_list(tokens, bracket_left, bracket_right, delimiter, action):
         token_open = tokens[0]
-        if token_open.content != "{":
+        if token_open.content != bracket_left:
             raise ValueError()
         tokens = tokens[1:]
 
@@ -29,7 +29,7 @@ class Parser:
         while True:
             next_token = tokens[0]
 
-            if next_token.content == ",":
+            if next_token.content == delimiter:
                 if comma_count > 0:
                     raise ValueError("Too many commas in set")
                 if len(elements) == 0:
@@ -37,12 +37,17 @@ class Parser:
 
                 comma_count += 1
                 tokens = tokens[1:]
-            elif next_token.content == "}":
-                return Set(elements), tokens[1:]
+            elif next_token.content == bracket_right:
+                return elements, tokens[1:]
             else:
                 comma_count = 0
-                element, tokens = Parser.parse_expression(tokens)
-                elements.append(element)
+                out, tokens = action(tokens)
+                elements.append(out)
+
+    @staticmethod
+    def parse_set(tokens):
+        elements, tokens = Parser.parse_list(tokens, "{", "}", ",", Parser.parse_expression)
+        return Set(elements), tokens
 
     @staticmethod
     def parse_function_call(tokens):
