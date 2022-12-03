@@ -1,8 +1,8 @@
-def S(X){
+def S(X, Y){
     return {X};
 };
 
 B = {};
-for(A={}; A != S(S({})); A = S(A);){
+for(A={}; A != S(S({}, {})); A = S(A, {});){
     B = {B};
 };

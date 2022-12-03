@@ -54,30 +54,8 @@ class Parser:
         identifier = tokens[0]
         tokens = tokens[1:]
 
-        token_open = tokens[0]
-        if token_open.content != "(":
-            raise ValueError()
-        tokens = tokens[1:]
-
-        expressions = []
-        comma_count = 0
-        while True:
-            next_token = tokens[0]
-
-            if next_token.content == ",":
-                if comma_count > 0:
-                    raise ValueError("Too many commas in set")
-                if len(expressions) == 0:
-                    raise ValueError()
-
-                comma_count += 1
-                tokens = tokens[1:]
-            elif next_token.content == ")":
-                return FunctionCall(Variable(identifier.content), expressions), tokens[1:]
-            else:
-                comma_count = 0
-                expression, tokens = Parser.parse_expression(tokens)
-                expressions.append(expression)
+        expressions, tokens = Parser.parse_list(tokens, "(", ")", ",", Parser.parse_expression)
+        return FunctionCall(Variable(identifier.content), expressions), tokens
 
     @staticmethod
     def parse_expression(tokens):
@@ -171,7 +149,6 @@ class Parser:
         tokens = tokens[1:]
 
         return ForLoop(start, condition, induction, statements), tokens
-
 
     @staticmethod
     def parse_function_parameters(tokens):
