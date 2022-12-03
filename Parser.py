@@ -1,4 +1,5 @@
 from set_ast.expression.set import Set
+from set_ast.expression.tuple import Tuple
 from set_ast.statement.assignment import Assignment
 from set_ast.expression.Variable import Variable
 from set_ast.expression.operation.union import Union
@@ -50,6 +51,11 @@ class Parser:
         return Set(elements), tokens
 
     @staticmethod
+    def parse_Tuple(tokens):
+        elements, tokens = Parser.parse_list(tokens, "<", ">", ",", Parser.parse_expression)
+        return Tuple(elements), tokens
+
+    @staticmethod
     def parse_function_call(tokens):
         identifier = tokens[0]
         tokens = tokens[1:]
@@ -63,6 +69,8 @@ class Parser:
 
         if next_token.content == "{":
             lhs, tokens = Parser.parse_set(tokens)
+        elif next_token.content == "<":
+            lhs, tokens = Parser.parse_Tuple(tokens)
         elif next_token.type == "Identifier":
             over_next_token = tokens[1]
             if over_next_token.content == "(":

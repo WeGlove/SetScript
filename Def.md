@@ -10,6 +10,7 @@
 - Expression := Set | Operation | Variable
 - Set := "{"[Expression \[, Expression\]\*]*"}"
 - Function_Call := Identifier
+- Tuple := "<"[Expression \[, Expression\]\*]*">"
 
 ### Operations
 - Operations := Union | Intersection | Difference | In | Equality | Inequality
