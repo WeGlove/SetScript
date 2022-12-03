@@ -8,7 +8,7 @@ class FunctionCall(Node):
         self.identifier = identifier
         self.expressions = expressions
 
-    def execute(self, env=None):
+    def execute(self, env: Environment):
         scope_env = Environment(super_env=env)
         function = env.get_value(self.identifier.name)
         for parameter, expression in zip(function.parameters, self.expressions):

@@ -20,6 +20,5 @@ class Environment:
     def close_scope(self):
         self.scope_close = True
 
-
     def __str__(self):
         return str(self.assignments)

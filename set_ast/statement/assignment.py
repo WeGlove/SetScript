@@ -1,4 +1,5 @@
 from set_ast.node import Node
+from set_ast.Environment import Environment
 
 
 class Assignment(Node):
@@ -7,7 +8,7 @@ class Assignment(Node):
         self.variable = variable
         self.expression = expression
 
-    def execute(self, env=None):
+    def execute(self, env: Environment):
         env, val = self.expression.execute(env)
         env.set_value(self.variable.name, val)
         return env, None

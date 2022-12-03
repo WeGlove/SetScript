@@ -1,4 +1,5 @@
 from set_ast.node import Node
+from set_ast.Environment import Environment
 
 
 class Function(Node):
@@ -8,7 +9,7 @@ class Function(Node):
         self.parameters = parameters
         self.statements = statements
 
-    def execute(self, env=None):
+    def execute(self, env: Environment):
         env.set_value(self.identifier.name, self)
         return env, None
 

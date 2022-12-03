@@ -1,4 +1,5 @@
 from set_ast.node import Node
+from set_ast.Environment import Environment
 
 
 class WhileLoop(Node):
@@ -7,7 +8,7 @@ class WhileLoop(Node):
         self.condition = condition
         self.statements = statements
 
-    def execute(self, env=None):
+    def execute(self, env: Environment):
         while self.condition.execute(env)[1] == frozenset():
             for statement in self.statements:
                 env, _ = statement.execute(env)
