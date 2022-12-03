@@ -1,4 +1,8 @@
-def f(A){
-    return {A};
+def S(X){
+    return {X};
 };
-B = f(f(f(f({}))));
+
+B = {};
+for(A={}; A != S(S({})); A = S(A);){
+    B = {B};
+};

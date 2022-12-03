@@ -10,7 +10,7 @@ class Environment:
             return self.assignments[key]
         else:
             if self.super_env is None:
-                raise ValueError()
+                raise ValueError(f"{key} not Found in Environment")
             else:
                 return self.super_env.get_value(key)
 

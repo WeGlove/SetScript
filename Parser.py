@@ -5,7 +5,9 @@ from set_ast.expression.operation.union import Union
 from set_ast.expression.operation.intersection import Intersection
 from set_ast.expression.operation.difference import Difference
 from set_ast.expression.operation.equality import Equality
+from set_ast.expression.operation.inequality import InEquality
 from set_ast.statement.while_loop import WhileLoop
+from set_ast.statement.for_loop import ForLoop
 from set_ast.set_ast import SetAst
 from set_ast.expression.operation.In import In
 from set_ast.statement.stmt_return import StmtReturn
@@ -78,7 +80,7 @@ class Parser:
 
         if next_token.content == "{":
             lhs, tokens = Parser.parse_set(tokens)
-        elif next_token.type == "Word":
+        elif next_token.type == "Identifier":
             over_next_token = tokens[1]
             if over_next_token.content == "(":
                 lhs, tokens = Parser.parse_function_call(tokens)
@@ -104,6 +106,10 @@ class Parser:
             tokens = tokens[1:]
             rhs, tokens = Parser.parse_expression(tokens)
             return Equality(lhs, rhs), tokens
+        elif next_token.content == "!=":
+            tokens = tokens[1:]
+            rhs, tokens = Parser.parse_expression(tokens)
+            return InEquality(lhs, rhs), tokens
         elif next_token.content == "in":
             tokens = tokens[1:]
             rhs, tokens = Parser.parse_expression(tokens)
@@ -115,7 +121,7 @@ class Parser:
     @staticmethod
     def parse_assignment(tokens):
         variable = tokens[0]
-        if variable.type != "Word":
+        if variable.type != "Identifier":
             raise ValueError("Expression variable is not a Word")
 
         assign = tokens[1]
@@ -141,6 +147,26 @@ class Parser:
         tokens = tokens[1:]
 
         return WhileLoop(condition, statements), tokens
+
+    @staticmethod
+    def parse_for(tokens):
+        token_for = tokens[0]
+        token_bracket_open = tokens[1]
+        tokens = tokens[2:]
+        start, tokens = Parser.parse_statement(tokens)
+        condition, tokens = Parser.parse_statement(tokens)
+        induction, tokens = Parser.parse_statement(tokens)
+        token_bracket_close = tokens[0]
+        token_curl_open = tokens[1]
+        tokens = tokens[2:]
+        statements = []
+        while tokens[0].content != "}":
+            statement, tokens = Parser.parse_statement(tokens)
+            statements.append(statement)
+        tokens = tokens[1:]
+
+        return ForLoop(start, condition, induction, statements), tokens
+
 
     @staticmethod
     def parse_function_parameters(tokens):
@@ -193,25 +219,28 @@ class Parser:
 
         return Function(Variable(identifier_token.content), [identifier.name for identifier in identifiers], statements), tokens
 
-
     @staticmethod
     def parse_statement(tokens):
         token = tokens[0]
         if token.content == "while":
             statement, tokens = Parser.parse_while(tokens)
+        elif token.content == "for":
+            statement, tokens = Parser.parse_for(tokens)
         elif token.content == "def":
             statement, tokens = Parser.parse_function(tokens)
         elif token.content == "return":
             expr, tokens = Parser.parse_expression(tokens[1:])
             statement = StmtReturn(expr)
-        else:
+        elif token.type == "Identifier" and tokens[1].content == "=":
             statement, tokens = Parser.parse_assignment(tokens)
+        else:
+            statement, tokens = Parser.parse_expression(tokens)
 
         token = tokens[0]
         if token.content == ";":
             return statement, tokens[1:]
         else:
-            raise ValueError("Missing Semicolon")
+            raise ValueError(f"Missing Semicolon in {token.line_number}:{token.column_number}")
 
     @staticmethod
     def parse(tokens):
