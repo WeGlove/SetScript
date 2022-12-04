@@ -17,6 +17,7 @@ from set_ast.statement.stmt_return import StmtReturn
 from set_ast.statement.function import Function
 from set_ast.expression.function_call import FunctionCall
 from set_ast.statement.stmt_import import StmtImport
+from set_ast.statement.stmt_if import StmtIf
 
 
 class Parser:
@@ -25,7 +26,7 @@ class Parser:
     def parse_list(tokens, bracket_left, bracket_right, delimiter, action):
         token_open = tokens[0]
         if token_open.content != bracket_left:
-            raise ValueError()
+            raise ValueError("Unexpected lef bracket")
         tokens = tokens[1:]
 
         elements = []
@@ -248,6 +249,45 @@ class Parser:
         return StmtImport(path.content), tokens[2:]
 
     @staticmethod
+    def parse_if(tokens):
+        if_token = tokens[0]
+        tokens = tokens[1:]
+
+        bracket_open = tokens[0]
+        condition, tokens = Parser.parse_expression(tokens[1:])
+        bracket_close = tokens[0]
+
+        token_bracket_open = tokens[1]
+        tokens = tokens[2:]
+
+        if_statements = []
+        while True:
+            next_token = tokens[0]
+            if next_token.content == "}":
+                tokens = tokens[1:]
+                break
+            else:
+                statement, tokens = Parser.parse_statement(tokens)
+                if_statements.append(statement)
+
+        else_token = tokens[0]
+        token_bracket_open = tokens[1]
+        tokens = tokens[2:]
+
+        else_statements = []
+        while True:
+            next_token = tokens[0]
+            if next_token.content == "}":
+                tokens = tokens[1:]
+                break
+            else:
+                statement, tokens = Parser.parse_statement(tokens)
+                else_statements .append(statement)
+
+        return StmtIf(condition, if_statements, else_statements), tokens
+
+
+    @staticmethod
     def parse_statement(tokens):
         token = tokens[0]
         if token.content == "while":
@@ -256,6 +296,8 @@ class Parser:
             statement, tokens = Parser.parse_for(tokens)
         elif token.content == "def":
             statement, tokens = Parser.parse_function(tokens)
+        elif token.content == "if":
+            statement, tokens = Parser.parse_if(tokens)
         elif token.content == "return":
             expr, tokens = Parser.parse_expression(tokens[1:])
             statement = StmtReturn(expr)

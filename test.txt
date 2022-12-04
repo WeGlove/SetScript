@@ -1,5 +1,5 @@
-import lib//nat_num.set;
-
-A = {{}};
-B = {{{}}};
-C = subtract(B,A);
+if ({{}}) {
+    A = {};
+} else {
+    B = {};
+};
