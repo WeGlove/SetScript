@@ -1,2 +1,2 @@
 A = {};
-import test2.txt;
+B = && A;

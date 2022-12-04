@@ -2,15 +2,17 @@ from set_ast.expression.set import Set
 from set_ast.expression.tuple import Tuple
 from set_ast.statement.assignment import Assignment
 from set_ast.expression.Variable import Variable
-from set_ast.expression.operation.union import Union
-from set_ast.expression.operation.intersection import Intersection
-from set_ast.expression.operation.difference import Difference
-from set_ast.expression.operation.equality import Equality
-from set_ast.expression.operation.inequality import InEquality
+from set_ast.expression.operation.binary.union import Union
+from set_ast.expression.operation.binary.intersection import Intersection
+from set_ast.expression.operation.binary.difference import Difference
+from set_ast.expression.operation.binary.equality import Equality
+from set_ast.expression.operation.binary.inequality import InEquality
+from set_ast.expression.operation.big_intersection import BigIntersection
+from set_ast.expression.operation.big_union import BigUnion
 from set_ast.statement.while_loop import WhileLoop
 from set_ast.statement.for_loop import ForLoop
 from set_ast.set_ast import SetAst
-from set_ast.expression.operation.In import In
+from set_ast.expression.operation.binary.In import In
 from set_ast.statement.stmt_return import StmtReturn
 from set_ast.statement.function import Function
 from set_ast.expression.function_call import FunctionCall
@@ -73,6 +75,18 @@ class Parser:
         return expression, tokens[1:]
 
     @staticmethod
+    def parse_big_union(tokens):
+        symbol = tokens[0]
+        expr, tokens = Parser.parse_expression(tokens[1:])
+        return BigIntersection(expr), tokens
+
+    @staticmethod
+    def parse_big_intersection(tokens):
+        symbol = tokens[0]
+        expr, tokens = Parser.parse_expression(tokens[1:])
+        return BigIntersection(expr), tokens
+
+    @staticmethod
     def parse_expression(tokens):
         next_token = tokens[0]
 
@@ -88,6 +102,10 @@ class Parser:
                 lhs, tokens = Parser.parse_function_call(tokens)
             else:
                 lhs, tokens = Variable(next_token.content), tokens[1:]
+        elif next_token.content == "&&":
+            lhs, tokens = Parser.parse_big_union(tokens)
+        elif next_token.content == "||":
+            lhs, tokens = Parser.parse_big_intersection(tokens)
         else:
             raise ValueError()
 

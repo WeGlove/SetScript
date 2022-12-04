@@ -15,13 +15,22 @@
 - Parenthesis := "(" Expression ")"
 
 ### Operations
-- Operations := Union | Intersection | Difference | In | Equality | Inequality
+- Operations := Binary_Operations | Unariy Operations
+- Binary_Operations := Union | Intersection | Difference | In | Equality | Inequality
+- Unariy_Operations := BigUnion | BigIntersection
+
+#### Binary Operations
+
 - Union := Expression | Expression
 - Intersection := Expression & Expression
 - Difference := Expression - Expression
 - In := Expression "in" Expression
 - Equality := Expression "==" Expression
 - Inequality := Expression "!=" Expression
+
+#### Unariy Operations
+- BigUnion := "||" Expression
+- BigIntersection := "&&" Expression
 
 ## Misc
 - Identifier := ([A..Z|a..z])*
