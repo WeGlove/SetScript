@@ -15,7 +15,7 @@ class Tuple(Node):
 
         for element in self.elements[1:]:
             env, val = element.execute(env)
-            res_set = frozenset([res_set, frozenset([res_set, val])])
+            res_set = frozenset([frozenset([res_set]), frozenset([res_set, val])])
 
         return env, res_set
 

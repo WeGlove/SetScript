@@ -8,13 +8,16 @@ class BigIntersection(Node):
         self.expr = expr
 
     def execute(self, env: Environment):
-        ## Create a Big Union
-        res = frozenset()
         env, expr_set = self.expr.execute(env)
+        union = []
         for x in expr_set:
-            res = res | expr_set
+            for y in x:
+                union.append(y)
 
-        # Then create Big intersection
+        elements = []
         for x in expr_set:
-            res = res & expr_set
-        return env, res
+            elements = []
+            for y in x:
+                elements.append(y)
+            union = [el for el in union if el in elements]
+        return env, frozenset(union)

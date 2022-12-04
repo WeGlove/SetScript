@@ -1,0 +1,17 @@
+def as_set(X){
+    return ||X;
+};
+
+def right(X){
+    return && ||{as_set(X) & X};
+};
+
+def left(X){
+    return && &&X;
+};
+
+def swap(X){
+    l = left(X);
+    r = right(X);
+    return <r, l>;
+};

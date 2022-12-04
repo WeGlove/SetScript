@@ -1,5 +1,7 @@
-if ({{}}) {
-    A = {};
-} else {
-    B = {};
-};
+import lib/tuple.set;
+
+A = <{},{{}}>;
+s = as_set(A);
+r = right(A);
+l = left(A);
+B = swap(A);
