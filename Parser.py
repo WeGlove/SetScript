@@ -78,7 +78,7 @@ class Parser:
     def parse_big_union(tokens):
         symbol = tokens[0]
         expr, tokens = Parser.parse_expression(tokens[1:])
-        return BigIntersection(expr), tokens
+        return BigUnion(expr), tokens
 
     @staticmethod
     def parse_big_intersection(tokens):
@@ -103,9 +103,11 @@ class Parser:
             else:
                 lhs, tokens = Variable(next_token.content), tokens[1:]
         elif next_token.content == "&&":
-            lhs, tokens = Parser.parse_big_union(tokens)
+            expr, tokens = Parser.parse_big_intersection(tokens)
+            return expr, tokens
         elif next_token.content == "||":
-            lhs, tokens = Parser.parse_big_intersection(tokens)
+            expr, tokens = Parser.parse_big_union(tokens)
+            return expr, tokens
         else:
             raise ValueError()
 
@@ -268,7 +270,7 @@ class Parser:
         if token.content == ";":
             return statement, tokens[1:]
         else:
-            raise ValueError(f"Missing Semicolon in {token.line_number}:{token.column_number}")
+            raise ValueError(f"Missing Semicolon in {token.file}:{token.line_number}:{token.column_number}")
 
     @staticmethod
     def parse(tokens):

@@ -8,8 +8,9 @@ class BigUnion(Node):
         self.expr = expr
 
     def execute(self, env: Environment):
-        res = frozenset()
         env, expr_set = self.expr.execute(env)
+        elements = []
         for x in expr_set:
-            res = res | expr_set
-        return env, res
+            for y in x:
+                elements.append(y)
+        return env, frozenset(elements)

@@ -8,7 +8,7 @@ class Lexer:
     whitespace = [" ", "\n", "\t", "\r"]
 
     @staticmethod
-    def lex_keyword(line, line_number, column_number):
+    def lex_keyword(line, file, line_number, column_number):
         possible_key_words = list(Lexer.keywords)
 
         chain = ""
@@ -23,14 +23,14 @@ class Lexer:
                 break
 
         if len(matches) == 0:
-            raise ValueError
+            return None, line
 
         out = max(matches, key=lambda x: len(x))
 
-        return Token("Symbol", out, line_number, column_number), line[len(out):]
+        return Token("Symbol", out, file, line_number, column_number), line[len(out):]
 
     @staticmethod
-    def lex_line(line, line_number):
+    def lex_line(line, file, line_number):
         tokens = []
 
         word = ""
@@ -41,15 +41,19 @@ class Lexer:
                 break
             if char in Lexer.whitespace:
                 if len(word) > 0:
-                    tokens.append(Token("Identifier", word, line_number, column_number))
+                    tokens.append(Token("Identifier", word, file, line_number, column_number))
                     word = ""
                 line = line[1:]
             elif char in [l[0] for l in Lexer.keywords]:
-                if len(word) > 0:
-                    tokens.append(Token("Identifier", word, line_number, column_number))
-                    word = ""
-                token, line = Lexer.lex_keyword(line, line_number, column_number)
-                tokens.append(token)
+                token, line = Lexer.lex_keyword(line, file, line_number, column_number)
+                if token is None:
+                    word += line[0]
+                    line = line[1:]
+                else:
+                    if len(word) > 0:
+                        tokens.append(Token("Identifier", word, file, line_number, column_number))
+                        word = ""
+                    tokens.append(token)
             else:
                 word += line[0]
                 line = line[1:]
@@ -58,17 +62,18 @@ class Lexer:
         return tokens
 
     @staticmethod
-    def lex(f):
-        tokens = []
-        line_number = 0
+    def lex(path):
+        with open(path, "r") as f:
+            tokens = []
+            line_number = 0
 
-        while True:
-            line = f.readline()
-            if line == "":
-                break
-            tokens.extend(Lexer.lex_line(line, line_number))
-            line_number += 1
+            while True:
+                line = f.readline()
+                if line == "":
+                    break
+                tokens.extend(Lexer.lex_line(line, path, line_number))
+                line_number += 1
 
-        return tokens
+            return tokens
 
 

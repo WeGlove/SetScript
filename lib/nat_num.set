@@ -1,0 +1,33 @@
+def S(X){
+    return {X};
+};
+
+def add(X,Y){
+    res = {};
+    for (i={}; i!=X; i = S(i);){
+        res = S(res);
+    };
+
+    for (i={}; i!=Y; i = S(i);){
+        res = S(res);
+    };
+
+    return res;
+};
+
+def multiply(X,Y){
+    res = {};
+    for (i={}; i!=X; i = S(i);){
+        res = add(res, Y);
+    };
+
+    return res;
+};
+
+def subtract(X, Y){
+    for(i={}; i!=Y; i = S(i);){
+        X = ||X;
+    };
+
+    return X;
+};
