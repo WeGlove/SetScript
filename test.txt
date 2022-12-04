@@ -1,4 +1,2 @@
 A = {};
-B = {};
-C = {};
-B = (A & B) & C;
+import test2.txt;

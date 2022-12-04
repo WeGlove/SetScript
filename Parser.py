@@ -14,6 +14,7 @@ from set_ast.expression.operation.In import In
 from set_ast.statement.stmt_return import StmtReturn
 from set_ast.statement.function import Function
 from set_ast.expression.function_call import FunctionCall
+from set_ast.statement.stmt_import import StmtImport
 
 
 class Parser:
@@ -220,6 +221,13 @@ class Parser:
         return Function(Variable(identifier_token.content), [identifier.name for identifier in identifiers], statements), tokens
 
     @staticmethod
+    def parse_import(tokens):
+        import_token = tokens[0]
+        path = tokens[1]
+
+        return StmtImport(path.content), tokens[2:]
+
+    @staticmethod
     def parse_statement(tokens):
         token = tokens[0]
         if token.content == "while":
@@ -231,6 +239,8 @@ class Parser:
         elif token.content == "return":
             expr, tokens = Parser.parse_expression(tokens[1:])
             statement = StmtReturn(expr)
+        elif token.content == "import":
+            statement, tokens = Parser.parse_import(tokens)
         elif token.type == "Identifier" and tokens[1].content == "=":
             statement, tokens = Parser.parse_assignment(tokens)
         else:
