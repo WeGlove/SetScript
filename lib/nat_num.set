@@ -2,6 +2,10 @@ def S(X){
     return {X};
 };
 
+def pred(X){
+    return ||X;
+};
+
 def add(X,Y){
     res = {};
     for (i={}; i!=X; i = S(i);){
@@ -30,4 +34,18 @@ def subtract(X, Y){
     };
 
     return X;
+};
+
+def lt(X, Y){
+    while ((X != Y) & (Y != {})){
+        Y = pred(Y);
+    };
+
+    out = {};
+    if (X != Y){
+        out = {{}};
+    } else {
+    };
+
+    return out;
 };

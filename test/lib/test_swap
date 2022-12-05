@@ -1,0 +1,4 @@
+import ../../lib/tuple.set;
+
+X = <{}, {{}}>;
+Y = swap(X);

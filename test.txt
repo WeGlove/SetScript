@@ -1,7 +1,6 @@
-import lib/tuple.set;
+import lib/nat_num.set;
 
-A = <{},{{}}>;
-s = as_set(A);
-r = right(A);
-l = left(A);
-B = swap(A);
+X = {{}};
+Y = {};
+
+Z = lt(X,Y);
