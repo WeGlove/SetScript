@@ -18,6 +18,8 @@ from set_ast.statement.function import Function
 from set_ast.expression.function_call import FunctionCall
 from set_ast.statement.stmt_import import StmtImport
 from set_ast.statement.stmt_if import StmtIf
+from set_ast.statement.namespace import Namespace
+from set_ast.expression.qualified import Qualified
 
 
 class Parser:
@@ -26,7 +28,7 @@ class Parser:
     def parse_list(tokens, bracket_left, bracket_right, delimiter, action):
         token_open = tokens[0]
         if token_open.content != bracket_left:
-            raise ValueError("Unexpected lef bracket")
+            raise ValueError(f"Unexpected left bracket in {token_open.file}:{token_open.line_number}:{token_open.column_number}")
         tokens = tokens[1:]
 
         elements = []
@@ -61,11 +63,10 @@ class Parser:
 
     @staticmethod
     def parse_function_call(tokens):
-        identifier = tokens[0]
-        tokens = tokens[1:]
+        identifier, tokens = Parser.parse_qualified(tokens)
 
         expressions, tokens = Parser.parse_list(tokens, "(", ")", ",", Parser.parse_expression)
-        return FunctionCall(Variable(identifier.content), expressions), tokens
+        return FunctionCall(identifier, expressions), tokens
 
     @staticmethod
     def parse_parentheses(tokens):
@@ -98,11 +99,12 @@ class Parser:
         elif next_token.content == "(":
             lhs, tokens = Parser.parse_parentheses(tokens)
         elif next_token.type == "Identifier":
-            over_next_token = tokens[1]
-            if over_next_token.content == "(":
+            qualified, q_tokens = Parser.parse_qualified(tokens)
+            next_token = q_tokens[0]
+            if next_token.content == "(":
                 lhs, tokens = Parser.parse_function_call(tokens)
             else:
-                lhs, tokens = Variable(next_token.content), tokens[1:]
+                lhs, tokens = Parser.parse_qualified(tokens)
         elif next_token.content == "&&":
             expr, tokens = Parser.parse_big_intersection(tokens)
             return expr, tokens
@@ -142,16 +144,30 @@ class Parser:
             return lhs, tokens
 
     @staticmethod
-    def parse_assignment(tokens):
-        variable = tokens[0]
-        if variable.type != "Identifier":
-            raise ValueError("Expression variable is not a Word")
+    def parse_qualified(tokens):
+        name_tokens = []
+        while True:
+            next_token = tokens[0]
+            if next_token.type == "Identifier":
+                name_tokens.append(next_token)
+                tokens = tokens[1:]
+            else:
+                break
 
-        assign = tokens[1]
+            next_token = tokens[0]
+            if next_token.content == ".":
+                tokens = tokens[1:]
+        return Qualified(name_tokens), tokens
+
+    @staticmethod
+    def parse_assignment(tokens):
+        qualified, tokens = Parser.parse_qualified(tokens)
+
+        assign = tokens[0]
         if assign.content != "=":
             raise ValueError("Expression variable is not a Word")
-        expression, tokens = Parser.parse_expression(tokens[2:])
-        assignment = Assignment(Variable(variable.content), expression)
+        expression, tokens = Parser.parse_expression(tokens[1:])
+        assignment = Assignment(qualified, expression)
         return assignment, tokens
 
     @staticmethod
@@ -244,9 +260,26 @@ class Parser:
     @staticmethod
     def parse_import(tokens):
         import_token = tokens[0]
-        path = tokens[1]
+        tokens = tokens[1:]
 
-        return StmtImport(path.content), tokens[2:]
+        path_tokens = []
+        while True:
+            next_token = tokens[0]
+            if next_token.type == "Identifier":
+                path_tokens.append(next_token)
+                tokens = tokens[1:]
+            else:
+                break
+
+            next_token = tokens[0]
+            if next_token.content == ".":
+                path_tokens.append(next_token)
+                tokens = tokens[1:]
+
+        if len(path_tokens) == 0:
+            raise ValueError(f"Empty Path in import {import_token.file}:{import_token.line_number}:{import_token.column_number}")
+
+        return StmtImport(path_tokens), tokens
 
     @staticmethod
     def parse_if(tokens):
@@ -286,6 +319,26 @@ class Parser:
 
         return StmtIf(condition, if_statements, else_statements), tokens
 
+    @staticmethod
+    def parse_namespace(tokens):
+        token_namespace = tokens[0]
+        token_bracket_open = tokens[1]
+        token_identifier = tokens[2]
+        token_bracket_close = tokens[3]
+        token_curl_bracket_open = tokens[4]
+        tokens = tokens[5:]
+        statements = []
+        while True:
+            next_token = tokens[0]
+            if next_token.content == "}":
+                break
+            statement, tokens = Parser.parse_statement(tokens)
+            statements.append(statement)
+
+        token_curl_bracket_close = tokens[0]
+        tokens = tokens[1:]
+
+        return Namespace(token_identifier, statements), tokens
 
     @staticmethod
     def parse_statement(tokens):
@@ -303,6 +356,8 @@ class Parser:
             statement = StmtReturn(expr)
         elif token.content == "import":
             statement, tokens = Parser.parse_import(tokens)
+        elif token.content == "namespace":
+            statement, tokens = Parser.parse_namespace(tokens)
         elif token.type == "Identifier" and tokens[1].content == "=":
             statement, tokens = Parser.parse_assignment(tokens)
         else:

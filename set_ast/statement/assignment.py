@@ -9,8 +9,9 @@ class Assignment(Node):
         self.expression = expression
 
     def execute(self, env: Environment):
+        print(self.variable.names)
         env, val = self.expression.execute(env)
-        env.set_value(self.variable.name, val)
+        env.set_value(self.variable.names, val)
         return env, None
 
     def __str__(self):

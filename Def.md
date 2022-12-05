@@ -1,5 +1,5 @@
 ## Statements
-- Statement := (Assignment | While | Function | Return | Expression | Import | If) ";"
+- Statement := (Assignment | While | Function | Return | Expression | Import | If | Namespace) ";"
 - Assignment := Variable "=" Expression
 - While := "while" "(" Expression ")" "{" [Statement]*"}"
 - For := "for" "(" statement ";" statement ";" statement ")" "{" [statement]*"}"
@@ -7,6 +7,7 @@
 - Return := "return" Expression
 - Import := "import" Path
 - If := "if" "(" Expression ")" "then" "{" [Statement]* "}" "else" "{" [Statement]* "}"
+- Namespace := "namespace" "(" Identifier "")" "{" [Statement]* "}"
 
 ## Expressions
 - Expression := Set | Operation | Variable | Parentheses
@@ -35,4 +36,5 @@
 
 ## Misc
 - Identifier := ([A..Z|a..z])*
+- Qualified_Identifier := Identifier ["." Identifier]*
 - Path := A file path

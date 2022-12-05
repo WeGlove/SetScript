@@ -8,7 +8,7 @@ class Variable(Node):
         self.name = name
 
     def execute(self, env: Environment):
-        return env, env.get_value(self.name)
+        return env, env.get_value(self.name.names)
 
     def __str__(self):
-        return f"Variable: {self.name}"
+        return f"Variable: {self.name.names}"

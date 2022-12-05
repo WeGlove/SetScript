@@ -21,6 +21,8 @@ class Function(Node):
 
         if not env.scope_close:
             raise ValueError()
+        if env.super_env is None:
+            raise ValueError("Invalid scope atend of function call!")
         return env.super_env, val
 
     def __str__(self):

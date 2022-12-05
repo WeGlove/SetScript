@@ -1,6 +1,9 @@
-import lib/nat_num.set;
+namespace (num){
+    import lib/nat_num.set;
+};
+
 
 X = {{}};
 Y = {};
 
-Z = lt(X,Y);
+Z = num.lt(X,Y);
