@@ -2,8 +2,7 @@ namespace (num){
     import lib/nat_num.set;
 };
 
+#X = num.S({});
+Y = num.S(num.S(num.S({})));
 
-X = {{}};
-Y = {};
-
-Z = num.lt(X,Y);
+sys.out(Y);

@@ -1,3 +1,6 @@
+from lib.system_functions import SystemFunctions
+
+
 class Environment:
 
     def __init__(self, assignments=None, super_env=None):
@@ -15,10 +18,17 @@ class Environment:
                 return self.assignments[key]
             else:
                 return self.assignments[key].get_value(keys[1:])
+        elif keys[0] == "sys":
+            env = SystemFunctions()
+            if len(keys) > 1:
+                return env.get_value(keys[1:])
+            else:
+                return env
         else:
             if self.super_env is None:
                 raise ValueError(f"{key} not Found in Environment")
             else:
+                print(keys)
                 return self.super_env.get_value(keys)
 
     def set_value(self, keys, val):
