@@ -9,7 +9,6 @@ class FunctionCall(Node):
         self.expressions = expressions
 
     def execute(self, env: Environment):
-
         scope_env = Environment()
         qualified_env = Environment()
         if len(self.identifier.names) > 1:

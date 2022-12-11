@@ -19,4 +19,4 @@ class ForLoop(Node):
         return env, None
 
     def __str__(self):
-        return "while"
+        return "for"

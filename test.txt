@@ -1,13 +1,7 @@
-namespace (num){
-    import lib/nat_num.set;
+namespace (int){
+    import lib/int_num.set;
 };
 
-namespace (tup){
-    import lib/tuple.set;
-};
+X = int.pred(int.zero());
 
-
-X = num.S(num.S(num.S(num.zero())));
-Y = num.S(num.S(num.zero()));
-
-sys.out(num.divide(X,Y));
+sys.out(X);

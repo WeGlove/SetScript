@@ -12,4 +12,4 @@ class StmtReturn(Node):
         return self.expression.execute(env)
 
     def __str__(self):
-        return "while"
+        return "return"

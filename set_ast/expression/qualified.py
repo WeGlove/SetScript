@@ -13,4 +13,4 @@ class Qualified(Node):
         return env, val
 
     def __str__(self):
-        ...
+        return str(self.name_tokens)

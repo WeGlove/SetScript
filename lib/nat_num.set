@@ -98,3 +98,7 @@ def geq(){
 def zero(){
     return {};
 };
+
+def one(){
+    return S(zero());
+};

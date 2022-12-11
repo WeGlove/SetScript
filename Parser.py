@@ -112,7 +112,7 @@ class Parser:
             expr, tokens = Parser.parse_big_union(tokens)
             return expr, tokens
         else:
-            raise ValueError()
+            raise ValueError(f"Unknown expression {next_token}")
 
         next_token = tokens[0]
         if next_token.content == "|":

@@ -3,23 +3,24 @@ from Token import Token
 
 class Lexer:
 
-    keywords = ["{", "}", "|", "=", "&", "==", ",", "-", ";", "!=", "in", "while", "(", ")", "def", "return", "for", "#",
-                "<", ">", "import", "&&", "||", "if", "else", "namespace", "."]
+    symbols = ["{", "}", "|", "=", "&", "==", ",", "-", ";", "!=", "(", ")", "#", "<", ">",  "&&", "||",  "."]
+    keywords = ["import", "if", "else", "namespace", "def", "return", "for", "in", "while", ]
+
     whitespace = [" ", "\n", "\t", "\r"]
 
     @staticmethod
-    def lex_keyword(line, file, line_number, column_number):
-        possible_key_words = list(Lexer.keywords)
+    def lex_symbol(line, file, line_number, column_number):
+        possible_symbols = list(Lexer.symbols)
 
         chain = ""
         matches = []
         for i in range(len(line)):
             char = line[i]
             chain += char
-            possible_key_words = [word for word in possible_key_words if word.startswith(chain)]
-            matches.extend([word for word in possible_key_words if word == chain])
+            possible_symbols = [word for word in possible_symbols if word.startswith(chain)]
+            matches.extend([word for word in possible_symbols if word == chain])
 
-            if len(possible_key_words) == 0:
+            if len(possible_symbols) == 0:
                 break
 
         if len(matches) == 0:
@@ -44,8 +45,8 @@ class Lexer:
                     tokens.append(Token("Identifier", word, file, line_number, column_number))
                     word = ""
                 line = line[1:]
-            elif char in [l[0] for l in Lexer.keywords]:
-                token, line = Lexer.lex_keyword(line, file, line_number, column_number)
+            elif char in [l[0] for l in Lexer.symbols]:
+                token, line = Lexer.lex_symbol(line, file, line_number, column_number)
                 if token is None:
                     word += line[0]
                     line = line[1:]

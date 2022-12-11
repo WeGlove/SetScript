@@ -1,0 +1,73 @@
+namespace (num){
+    import lib/nat_num.set;
+};
+
+namespace (tuple){
+    import lib/tuple.set;
+};
+
+def S(X){
+    x_sign = tuple.left(X);
+    value = tuple.right(X);
+
+    out_sign = {};
+    out_value = {};
+
+    if (x_sign == sign_pos()){
+        out_sign = x_sign;
+        out_value = num.S(value);
+    } else {
+        if (value == num.one()){
+            out_sign = pos_sign();
+            out_value = num.zero();
+        } else {
+            out_sign = x_sign();
+            out_value = num.pred(value);
+        };
+    };
+
+    return <out_sign, out_value>;
+};
+
+def pred(X){
+    x_sign = tuple.left(X);
+    value = tuple.right(X);
+
+    out_sign = {};
+    out_value = {};
+
+    if (x_sign == sign_neg()){
+        out_sign = x_sign;
+        out_value = num.S(value);
+    } else {
+        if (value == num.zero()){
+            out_sign = sign_neg();
+            out_value = num.one();
+        } else {
+            out_sign = x_sign;
+            out_value = num.pred(value);
+        };
+    };
+
+    return <out_sign, out_value>;
+};
+
+def sign(X){
+    return tuple.left(X);
+};
+
+def sign_pos(){
+    return {};
+};
+
+def sign_neg(){
+    return {{}};
+};
+
+def one(){
+    return S(zero());
+};
+
+def zero(){
+    return <sign_pos(), num.zero()>;
+};
