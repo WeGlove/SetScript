@@ -1,3 +1,6 @@
+# This lib is supposed to help with handling tuples.
+
+
 def as_set(X){
     return ||X;
 };
