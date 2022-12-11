@@ -36,8 +36,8 @@ def subtract(X, Y){
     return X;
 };
 
-def lt(X, Y){
-    while ((X != Y) & (Y != {})){
+def leq(X, Y){
+    while ((X != Y) | (Y != {})){
         Y = pred(Y);
     };
 
@@ -48,4 +48,21 @@ def lt(X, Y){
     };
 
     return out;
+};
+
+def gt(X,Y){
+    t = leq(X, Y);
+    if (t == {}){
+        t = {{}};
+    }
+    else{
+        t = {};
+    };
+
+    return t;
+
+};
+
+def zero(){
+    return {};
 };

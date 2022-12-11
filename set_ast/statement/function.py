@@ -23,7 +23,7 @@ class Function(Node):
             raise ValueError()
         if env.super_env is None:
             raise ValueError("Invalid scope atend of function call!")
-        return env.super_env, val
+        return env, val
 
     def __str__(self):
         return "Function: " + self.identifier

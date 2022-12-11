@@ -24,7 +24,11 @@ class FunctionCall(Node):
             env, val = expression.execute(env)
             scope_env.set_value(parameter, val)
 
-        return function.execute_body(scope_env)
+        _, val = function.execute_body(scope_env)
+
+        qualified_env.super_env = None
+
+        return env, val
 
     def __str__(self):
         ...
