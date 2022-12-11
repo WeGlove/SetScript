@@ -1,0 +1,8 @@
+
+def bzero = {};
+
+def bone = {{}};
+
+def create(A,B,C,D,E,G,H,I){
+    return <A,B,C,D,E,F,G,H,I>;
+};
