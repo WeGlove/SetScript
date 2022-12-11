@@ -36,6 +36,16 @@ def subtract(X, Y){
     return X;
 };
 
+def divide(X,Y){
+    count = zero();
+    while (geq(X,Y)){
+        X = subtract(X, Y);
+        count = S(count);
+    };
+
+    return <count, X>;
+};
+
 def leq(X, Y){
     while ((X != Y) | (Y != {})){
         Y = pred(Y);
@@ -50,8 +60,30 @@ def leq(X, Y){
     return out;
 };
 
+def lt(X, Y){
+    if (X == Y){
+        out = {{}};
+    } else {
+        out = leq(X,Y);
+    };
+    return out;
+};
+
 def gt(X,Y){
     t = leq(X, Y);
+    if (t == {}){
+        t = {{}};
+    }
+    else{
+        t = {};
+    };
+
+    return t;
+
+};
+
+def geq(){
+    t = lt(X, Y);
     if (t == {}){
         t = {{}};
     }

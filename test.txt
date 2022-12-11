@@ -2,7 +2,12 @@ namespace (num){
     import lib/nat_num.set;
 };
 
-Y = num.S({});
-X = num.S({});
+namespace (tup){
+    import lib/tuple.set;
+};
 
-sys.out(num.gt(X,Y));
+
+X = num.S(num.S(num.S(num.zero())));
+Y = num.S(num.S(num.zero()));
+
+sys.out(num.divide(X,Y));
