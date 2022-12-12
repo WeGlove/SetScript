@@ -1,7 +1,12 @@
-namespace (int){
-    import lib/int_num.set;
+namespace (num){
+    import lib/nat_num.set;
 };
 
-X = P({{},{{}}, {{{}}}});
+
+namespace (math){
+    import lib/math.set;
+};
+
+X = math.gaussian_sum(num.S(num.S(num.one())));
 
 sys.out(X);

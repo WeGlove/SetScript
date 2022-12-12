@@ -1,0 +1,31 @@
+namespace (num){
+    import lib/nat_num.set;
+};
+
+namespace (tuple){
+    import lib/nat_num.set;
+};
+
+def fib(n){
+    if (n == num.zero()){
+        return num.zero();
+    } else {
+    };
+
+    if (n == num.one()){
+        return num.zero();
+    } else {
+    };
+
+
+    F_0 = num.zero();
+    F_1 = num.one();
+
+    for (a={}; n != num.one(); n=num.pred(n);){
+        F = num.add(F_0, F_1);
+        F_0 = F_1;
+        F_1 = F;
+    };
+
+    return F;
+};
