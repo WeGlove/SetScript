@@ -20,6 +20,7 @@ from set_ast.statement.stmt_import import StmtImport
 from set_ast.statement.stmt_if import StmtIf
 from set_ast.statement.namespace import Namespace
 from set_ast.expression.qualified import Qualified
+from set_ast.expression.power import Power
 
 
 class Parser:
@@ -64,6 +65,12 @@ class Parser:
     @staticmethod
     def parse_function_call(tokens):
         identifier, tokens = Parser.parse_qualified(tokens)
+
+        if identifier.names[-1] == "P":
+            expressions, tokens = Parser.parse_list(tokens, "(", ")", ",", Parser.parse_expression)
+            if len(expressions) != 1 or len(identifier.names) != 1:
+                raise ValueError("Too many parameters in power set")
+            return Power(expressions[0]), tokens
 
         expressions, tokens = Parser.parse_list(tokens, "(", ")", ",", Parser.parse_expression)
         return FunctionCall(identifier, expressions), tokens
