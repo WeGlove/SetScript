@@ -12,7 +12,9 @@ class StmtIf(Node):
     def execute(self, env: Environment):
         env, val = self.condition.execute(env)
         for statement in (self.if_statements if val == frozenset() else self.else_statements):
-            env, _ = statement.execute(env)
+            env, val = statement.execute(env)
+            if env.return_flag:
+                return env, val
 
         return env, None
 

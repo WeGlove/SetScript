@@ -12,6 +12,8 @@ class WhileLoop(Node):
         while self.condition.execute(env)[1] == frozenset():
             for statement in self.statements:
                 env, _ = statement.execute(env)
+                if env.return_flag:
+                    break
         return env, None
 
     def __str__(self):

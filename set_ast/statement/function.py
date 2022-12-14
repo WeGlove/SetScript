@@ -16,11 +16,10 @@ class Function(Node):
     def execute_body(self, env=None):
         for statement in self.statements:
             env, val = statement.execute(env)
-            if env.scope_close:
+            if env.return_flag:
+                env.return_flag = False
                 break
 
-        if not env.scope_close:
-            raise ValueError()
         if env.super_env is None:
             raise ValueError("Invalid scope atend of function call!")
         return env, val

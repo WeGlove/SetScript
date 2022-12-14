@@ -7,6 +7,6 @@ namespace (math){
     import lib/math.set;
 };
 
-X = math.gaussian_sum(num.S(num.S(num.one())));
+X = math.fib(num.zero());
 
 sys.out(X);

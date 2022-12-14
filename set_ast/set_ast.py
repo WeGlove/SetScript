@@ -12,4 +12,6 @@ class SetAst(Node):
             env = Environment()
         for statement in self.statements:
             env, _ = statement.execute(env)
+            if env.return_flag:
+                break
         return env, None

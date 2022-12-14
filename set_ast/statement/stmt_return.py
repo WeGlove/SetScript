@@ -8,8 +8,9 @@ class StmtReturn(Node):
         self.expression = expression
 
     def execute(self, env: Environment):
-        env.close_scope()
-        return self.expression.execute(env)
+        env, val = self.expression.execute(env)
+        env.return_flag = True
+        return env, val
 
     def __str__(self):
         return "return"

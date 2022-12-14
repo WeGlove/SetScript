@@ -15,6 +15,10 @@ class ForLoop(Node):
         while self.condition.execute(env)[1] == frozenset():
             for statement in self.statements:
                 env, _ = statement.execute(env)
+                if env.return_flag:
+                    break
+            if env.return_flag:
+                break
             env, _ = self.induction.execute(env)
         return env, None
 
