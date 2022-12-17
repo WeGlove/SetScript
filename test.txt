@@ -1,12 +1,7 @@
-namespace (num){
-    import lib/nat_num.set;
+namespace (int){
+    import lib/int_num.set;
 };
 
-namespace (math){
-    import lib/math.set;
-};
+X = int.zero();
 
-X = num.S(num.S(num.S(num.zero())));
-Y = num.zero();
-
-sys.out(num.subtract(X,Y));
+sys.out(X);

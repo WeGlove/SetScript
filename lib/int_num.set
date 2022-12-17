@@ -7,61 +7,44 @@ namespace (tuple){
 };
 
 def S(X){
-    x_sign = tuple.left(X);
-    value = tuple.right(X);
-
-    out_sign = {};
-    out_value = {};
-
-    if (x_sign == sign_pos()){
-        out_sign = x_sign;
-        out_value = num.S(value);
-    } else {
-        if (value == num.one()){
-            out_sign = pos_sign();
-            out_value = num.zero();
-        } else {
-            out_sign = x_sign();
-            out_value = num.pred(value);
-        };
-    };
-
-    return <out_sign, out_value>;
+    left = tuple.left(X);
+    temp = S(left);
+    return <temp, tuple.right(X)>;
 };
 
 def pred(X){
-    x_sign = tuple.left(X);
-    value = tuple.right(X);
+    right = tuple.right(X);
+    temp = S(right);
+    return <tuple.left(X), temp>;
+};
 
-    out_sign = {};
-    out_value = {};
+def add(X, Y){
+    left = num.add(tuple.left(X),tuple.left(Y));
+    right = num.add(tuple.right(X),tuple.right(Y));
+    return <left, right>;
+};
 
-    if (x_sign == sign_neg()){
-        out_sign = x_sign;
-        out_value = num.S(value);
-    } else {
-        if (value == num.zero()){
-            out_sign = sign_neg();
-            out_value = num.one();
-        } else {
-            out_sign = x_sign;
-            out_value = num.pred(value);
-        };
-    };
+def normalize(X){
+    a = X.left(X);
+    b = X.right(X);
 
-    return <out_sign, out_value>;
+    if (a == b){
+        return <num.zero(), num.zero()>;
+    }else{};
+    if (num.lt(a, b)){
+        return <num.zero(), num.subtract(b, a)>;
+    }else{};
+    if (num.gt(a, b)){
+        return <num.subtract(a, b), num.zero()>;
+    }else{};
+};
+
+def equals(X, Y){
+    return normalize(X) == normalize(Y);
 };
 
 def sign(X){
-    return tuple.left(X);
-};
-
-def sign_pos(){
-    return {};
-};
-
-def sign_neg(){
-    return {{}};
+    return num.lt(tuple.left(X), tuple.right(X));
 };
 
 def one(){
@@ -69,5 +52,5 @@ def one(){
 };
 
 def zero(){
-    return <sign_pos(), num.zero()>;
+    return <num.zero(), num.zero()>;
 };
