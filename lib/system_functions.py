@@ -12,5 +12,8 @@ class SystemFunctions:
         if key == "out":
             from lib.sys_functions.sys_print import SysPrint
             return SysPrint()
+        elif key == "sleep":
+            from lib.sys_functions.sys_sleep import SysSleep
+            return SysSleep()
         else:
             ValueError("Unknwown sys function")

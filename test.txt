@@ -1,7 +1,7 @@
 namespace (int){
     import lib/int_num.set;
 };
-
+sys.sleep(1);
 X = 100;
 
 sys.out(X, {{}});
