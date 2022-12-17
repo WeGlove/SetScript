@@ -1,5 +1,5 @@
 from Lexer import Lexer
-from Parser import Parser
+from parsing.Parser import Parser
 
 
 def excecute_file(path, env):
