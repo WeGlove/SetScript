@@ -4,7 +4,8 @@ from Token import Token
 class Lexer:
 
     symbols = ["{", "}", "|", "=", "&", "==", ",", "-", ";", "!=", "(", ")", "#", "<", ">",  "&&", "||",  "."]
-    keywords = ["import", "if", "else", "namespace", "def", "return", "for", "in", "while", ]
+    keywords = ["import", "if", "else", "namespace", "def", "return", "for", "in", "while"]
+    numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
     whitespace = [" ", "\n", "\t", "\r"]
 
@@ -31,6 +32,14 @@ class Lexer:
         return Token("Symbol", out, file, line_number, column_number), line[len(out):]
 
     @staticmethod
+    def parse_identifier(word, file, line_number, column_number):
+        for char in word:
+            if char not in Lexer.numbers:
+                return Token("Identifier", word, file, line_number, column_number)
+
+        return Token("Number", word, file, line_number, column_number)
+
+    @staticmethod
     def lex_line(line, file, line_number):
         tokens = []
 
@@ -42,7 +51,7 @@ class Lexer:
                 break
             if char in Lexer.whitespace:
                 if len(word) > 0:
-                    tokens.append(Token("Identifier", word, file, line_number, column_number))
+                    tokens.append(Lexer.parse_identifier(word, file, line_number, column_number))
                     word = ""
                 line = line[1:]
             elif char in [l[0] for l in Lexer.symbols]:
@@ -52,7 +61,7 @@ class Lexer:
                     line = line[1:]
                 else:
                     if len(word) > 0:
-                        tokens.append(Token("Identifier", word, file, line_number, column_number))
+                        tokens.append(Lexer.parse_identifier(word, file, line_number, column_number))
                         word = ""
                     tokens.append(token)
             else:

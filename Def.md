@@ -10,12 +10,13 @@
 - Namespace := "namespace" "(" Identifier "")" "{" [Statement]* "}"
 
 ## Expressions
-- Expression := Set | Operation | Variable | Parentheses | Tuple | FunctionCall | Power
+- Expression := Set | Operation | Variable | Parentheses | Tuple | FunctionCall | Power | Number
 - Set := "{"[Expression \[, Expression\]\*]*"}"
 - Function_Call := Identifier([Expression \[, Expression\]\*])
 - Power := "P" "(" Expression ")"
 - Tuple := "<"[Expression \[, Expression\]\*]*">"
 - Parenthesis := "(" Expression ")"
+- Number := (0|1|2|3|4|5|6|7|8|9)+
 
 ### Operations
 - Operations := Binary_Operations | Unariy Operations

@@ -21,6 +21,7 @@ from set_ast.statement.stmt_if import StmtIf
 from set_ast.statement.namespace import Namespace
 from set_ast.expression.qualified import Qualified
 from set_ast.expression.power import Power
+from set_ast.expression.number import Number
 
 
 class Parser:
@@ -112,6 +113,9 @@ class Parser:
                 lhs, tokens = Parser.parse_function_call(tokens)
             else:
                 lhs, tokens = Parser.parse_qualified(tokens)
+        elif next_token.type == "Number":
+            lhs = Number(int(next_token.content))
+            tokens = tokens[1:]
         elif next_token.content == "&&":
             expr, tokens = Parser.parse_big_intersection(tokens)
             return expr, tokens
