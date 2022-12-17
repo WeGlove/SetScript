@@ -2,11 +2,11 @@ namespace (num){
     import lib/nat_num.set;
 };
 
-
 namespace (math){
     import lib/math.set;
 };
 
-X = math.fib(num.zero());
+X = num.S(num.S(num.S(num.zero())));
+Y = num.zero();
 
-sys.out(X);
+sys.out(num.subtract(X,Y));

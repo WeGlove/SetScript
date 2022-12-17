@@ -1,5 +1,5 @@
 def S(X){
-    return {X};
+    return {X} | X;
 };
 
 def pred(X){
