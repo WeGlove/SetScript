@@ -316,18 +316,19 @@ class Parser:
                 if_statements.append(statement)
 
         else_token = tokens[0]
-        token_bracket_open = tokens[1]
-        tokens = tokens[2:]
-
         else_statements = []
-        while True:
-            next_token = tokens[0]
-            if next_token.content == "}":
-                tokens = tokens[1:]
-                break
-            else:
-                statement, tokens = Parser.parse_statement(tokens)
-                else_statements .append(statement)
+        if else_token.content == "else":
+            token_bracket_open = tokens[1]
+            tokens = tokens[2:]
+
+            while True:
+                next_token = tokens[0]
+                if next_token.content == "}":
+                    tokens = tokens[1:]
+                    break
+                else:
+                    statement, tokens = Parser.parse_statement(tokens)
+                    else_statements.append(statement)
 
         return StmtIf(condition, if_statements, else_statements), tokens
 

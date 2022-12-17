@@ -6,7 +6,7 @@
 - Function := "def" Identifier "(" [Expression \[, Expression\]\*] ")" "{" Statement* "}"
 - Return := "return" Expression
 - Import := "import" Path
-- If := "if" "(" Expression ")" "then" "{" [Statement]* "}" "else" "{" [Statement]* "}"
+- If := "if" "(" Expression ")" "then" "{" [Statement]* "}" ["else" "{" [Statement]* "}"]
 - Namespace := "namespace" "(" Identifier "")" "{" [Statement]* "}"
 - EmptyStatement := ";"
 
