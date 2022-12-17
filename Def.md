@@ -1,5 +1,5 @@
 ## Statements
-- Statement := (Assignment | While | Function | Return | Expression | Import | If | Namespace) ";"
+- Statement := ((Assignment | While | Function | Return | Expression | Import | If | Namespace) ";") | EmptyStatement
 - Assignment := Variable "=" Expression
 - While := "while" "(" Expression ")" "{" [Statement]*"}"
 - For := "for" "(" statement ";" statement ";" statement ")" "{" [statement]*"}"
@@ -8,6 +8,7 @@
 - Import := "import" Path
 - If := "if" "(" Expression ")" "then" "{" [Statement]* "}" "else" "{" [Statement]* "}"
 - Namespace := "namespace" "(" Identifier "")" "{" [Statement]* "}"
+- EmptyStatement := ";"
 
 ## Expressions
 - Expression := Set | Operation | Variable | Parentheses | Tuple | FunctionCall | Power | Number

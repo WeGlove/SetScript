@@ -22,6 +22,7 @@ from set_ast.statement.namespace import Namespace
 from set_ast.expression.qualified import Qualified
 from set_ast.expression.power import Power
 from set_ast.expression.number import Number
+from set_ast.statement.empty import Empty
 
 
 class Parser:
@@ -371,6 +372,8 @@ class Parser:
             statement, tokens = Parser.parse_namespace(tokens)
         elif token.type == "Identifier" and tokens[1].content == "=":
             statement, tokens = Parser.parse_assignment(tokens)
+        elif token.content == ";":
+            statement = Empty()
         else:
             statement, tokens = Parser.parse_expression(tokens)
 
