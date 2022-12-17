@@ -2,6 +2,6 @@ namespace (int){
     import lib/int_num.set;
 };
 
-X = 10;
+X = 100;
 
-sys.out(X);
+sys.out(X, {{}});
