@@ -12,9 +12,14 @@ class SysPrint(Node):
         type = env.get_value(self.parameters[1])
         if type == frozenset():
             print(self.build_string(content))
-        else:
+        elif type == frozenset([frozenset()]):
             print(self.build_number(content))
+        elif type == frozenset([frozenset([frozenset()])]):
+            print(self.build_tuple_string(content))
         return env.super_env.super_env, frozenset()
+
+    def build_tuple_string(self, content):
+        ...
 
     def build_string(self, to_print, s=""):
         s += "{"

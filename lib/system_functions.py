@@ -15,5 +15,8 @@ class SystemFunctions:
         elif key == "sleep":
             from lib.sys_functions.sys_sleep import SysSleep
             return SysSleep()
+        elif key == "input":
+            from lib.sys_functions.sys_input import SysInput
+            return SysInput()
         else:
-            ValueError("Unknwown sys function")
+            ValueError("Unknown sys function")
