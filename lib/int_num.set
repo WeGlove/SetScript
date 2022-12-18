@@ -24,6 +24,17 @@ def add(X, Y){
     return <left, right>;
 };
 
+def mul(X, Y){
+    X_l = tuple.left(X);
+    X_r = tuple.right(X);
+    Y_l = tuple.left(X);
+    Y_r = tuple.right(X);
+
+    left = num.add(num.mul(X_l, Y_l), num.mul(X_r, Y_r));
+    right = num.add(num.mul(X_l, Y_r), num.mul(X_r, Y_l));
+    return <left, right>;
+};
+
 def normalize(X){
     a = X.left(X);
     b = X.right(X);

@@ -19,7 +19,7 @@ def add(X,Y){
     return res;
 };
 
-def multiply(X,Y){
+def mul(X,Y){
     res = {};
     for (i={}; i!=X; i = S(i);){
         res = add(res, Y);
@@ -28,7 +28,7 @@ def multiply(X,Y){
     return res;
 };
 
-def subtract(X, Y){
+def sub(X, Y){
     for(i={}; i!=Y; i = S(i);){
         X = ||X;
     };
@@ -36,10 +36,10 @@ def subtract(X, Y){
     return X;
 };
 
-def divide(X,Y){
+def div(X,Y){
     count = zero();
     while (geq(X,Y)){
-        X = subtract(X, Y);
+        X = sub(X, Y);
         count = S(count);
     };
 
