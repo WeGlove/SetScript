@@ -14,6 +14,14 @@ class WhileLoop(Node):
                 env, _ = statement.execute(env)
                 if env.return_flag:
                     break
+                elif env.continue_flag:
+                    env.continue_flag = False
+                    continue
+                elif env.break_flag:
+                    env.break_flag = False
+                    break
+            if env.return_flag:
+                break
         return env, None
 
     def __str__(self):

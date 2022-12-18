@@ -1,5 +1,6 @@
 ## Statements
-- Statement := ((Assignment | While | Function | Return | Expression | Import | If | Namespace) ";") | EmptyStatement
+- Statement := ((Assignment | While | Function | Return | Expression | Import | 
+                 If | Namespace | "break" | "continue") ";") | EmptyStatement
 - Assignment := Variable "=" Expression
 - While := "while" "(" Expression ")" "{" [Statement]*"}"
 - For := "for" "(" statement ";" statement ";" statement ")" "{" [statement]*"}"

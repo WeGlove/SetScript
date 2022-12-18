@@ -7,6 +7,8 @@ class Environment:
         self.assignments = assignments if assignments is not None else {}
         self.super_env = super_env
         self.return_flag = False
+        self.continue_flag = False
+        self.break_flag = False
 
     def get_value(self, keys):
         if type(keys) == str:

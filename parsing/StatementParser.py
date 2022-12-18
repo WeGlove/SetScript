@@ -6,6 +6,8 @@ from set_ast.statement.namespace import Namespace
 from set_ast.statement.stmt_if import StmtIf
 from set_ast.statement.stmt_import import StmtImport
 from set_ast.statement.stmt_return import StmtReturn
+from set_ast.statement.stmt_break import StmtBreak
+from set_ast.statement.stmt_continue import StmtContinue
 from set_ast.statement.while_loop import WhileLoop
 from set_ast.expression.Variable import Variable
 from parsing.ExpressionParser import ExpressionParser
@@ -209,6 +211,12 @@ class StatementParser:
         elif token.content == "return":
             expr, tokens = ExpressionParser.parse_expression(tokens[1:])
             statement = StmtReturn(expr)
+        elif token.content == "continue":
+            expr, tokens = ExpressionParser.parse_expression(tokens[1:])
+            statement = StmtContinue(expr)
+        elif token.content == "break":
+            expr, tokens = ExpressionParser.parse_expression(tokens[1:])
+            statement = StmtBreak(expr)
         elif token.content == "import":
             statement, tokens = StatementParser.parse_import(tokens)
         elif token.content == "namespace":
