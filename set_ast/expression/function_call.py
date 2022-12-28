@@ -9,7 +9,6 @@ class FunctionCall(Node):
         self.expressions = expressions
         self.set_class = set_class
 
-
     def execute(self, env: Environment):
         scope_env = Environment()
         qualified_env = Environment()

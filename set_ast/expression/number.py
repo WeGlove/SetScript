@@ -9,11 +9,7 @@ class Number(Node):
         self.set_class = set_class
 
     def execute(self, env: Environment):
-        res = frozenset()
-        for i in range(self.number):
-            res = frozenset([res, frozenset([res])])
-
-        return env, res
+        return env, self.set_class.number(self.number)
 
     def __str__(self):
         return "Number"

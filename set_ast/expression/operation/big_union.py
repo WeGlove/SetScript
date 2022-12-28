@@ -1,6 +1,5 @@
 from set_ast.node import Node
 from set_ast.Environment import Environment
-from set_math import SetMath
 
 
 class BigUnion(Node):
@@ -11,4 +10,4 @@ class BigUnion(Node):
 
     def execute(self, env: Environment):
         env, expr_set = self.expr.execute(env)
-        return env, SetMath.big_union(expr_set)
+        return env, expr_set.big_union()

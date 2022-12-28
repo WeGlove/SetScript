@@ -14,7 +14,7 @@ class Set(Node):
             env, val = element.execute(env)
             elements.append(val)
 
-        return env, frozenset([])
+        return env, self.set_class()
 
     def __str__(self):
         s = "{"

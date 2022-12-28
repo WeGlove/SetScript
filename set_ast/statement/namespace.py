@@ -15,7 +15,7 @@ class Namespace(Node):
         for statement in self.statements:
             new_env, _ = statement.execute(new_env)
 
-        return env, frozenset()
+        return env, self.set_class.empty()
 
     def __str__(self):
         return f"Namespace: {self.identifier}"

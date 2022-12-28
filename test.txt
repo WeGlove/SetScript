@@ -2,4 +2,6 @@ namespace(num) {
     import lib/nat_num.set;
 };
 
-sys.out({}, {});
+X = 3;
+Y = 3;
+Z = X == Y;

@@ -10,3 +10,4 @@ if __name__ == "__main__":
     env = Environment()
     ast = compile(path, factory)
     ast.execute(env)
+    print(env)
