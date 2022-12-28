@@ -14,7 +14,6 @@ class BigIntersection(Node):
             for y in x:
                 union.append(y)
 
-        elements = []
         for x in expr_set:
             elements = []
             for y in x:

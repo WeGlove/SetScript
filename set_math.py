@@ -9,6 +9,20 @@ class SetMath:
         return frozenset(elements)
 
     @staticmethod
+    def big_intersection(X):
+        union = []
+        for x in X:
+            for y in x:
+                union.append(y)
+
+        for x in X:
+            elements = []
+            for y in x:
+                elements.append(y)
+            union = [el for el in union if el in elements]
+        return frozenset(union)
+
+    @staticmethod
     def build_number(X):
         num = 0
         while X != frozenset():

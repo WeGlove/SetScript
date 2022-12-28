@@ -2,8 +2,8 @@ from Lexer import Lexer
 from parsing.Parser import Parser
 
 
-def excecute_file(path, env):
+def compile(path, factory):
     tokens = Lexer.lex(path)
-    ast = Parser.parse(tokens)
-    env, val = ast.execute(env)
-    return env, val
+    parser = Parser(factory)
+    ast = parser.parse(tokens)
+    return ast

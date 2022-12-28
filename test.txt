@@ -1,3 +1,5 @@
-X = sys.input();
+namespace(num) {
+    import lib/nat_num.set;
+};
 
-sys.out(X, {{}});
+sys.out({}, {});

@@ -1,91 +1,95 @@
-from set_ast.expression.power import Power
-from set_ast.expression.function_call import FunctionCall
-from set_ast.expression.qualified import Qualified
-from set_ast.expression.number import Number
-from set_ast.expression.set import Set
-from set_ast.expression.tuple import Tuple
-from set_ast.expression.operation.big_union import BigUnion
-from set_ast.expression.operation.big_intersection import BigIntersection
-from set_ast.expression.operation.binary.difference import Difference
-from set_ast.expression.operation.binary.equality import Equality
-from set_ast.expression.operation.binary.In import In
-from set_ast.expression.operation.binary.inequality import InEquality
-from set_ast.expression.operation.binary.intersection import Intersection
-from set_ast.expression.operation.binary.union import Union
-from parsing.ParsingUtils import ParsingUtils
-
-
 class ExpressionParser:
 
-    @staticmethod
-    def parse_set(tokens):
-        elements, tokens = ParsingUtils.parse_list(tokens, "{", "}", ",", ExpressionParser.parse_expression)
-        return Set(elements), tokens
+    def __init__(self, expr_factory):
+        self.expr_factory = expr_factory
 
-    @staticmethod
-    def parse_Tuple(tokens):
-        elements, tokens = ParsingUtils.parse_list(tokens, "<", ">", ",", ExpressionParser.parse_expression)
-        return Tuple(elements), tokens
+    def parse_list(self, tokens, bracket_left, bracket_right, delimiter):
+        token_open = tokens[0]
+        if token_open.content != bracket_left:
+            raise ValueError(f"Unexpected left bracket in {token_open.file}:{token_open.line_number}:{token_open.column_number}")
+        tokens = tokens[1:]
 
-    @staticmethod
-    def parse_function_call(tokens):
-        identifier, tokens = ExpressionParser.parse_qualified(tokens)
+        elements = []
+        comma_count = 0
+        while True:
+            next_token = tokens[0]
+
+            if next_token.content == delimiter:
+                if comma_count > 0:
+                    raise ValueError("Too many commas in set")
+                if len(elements) == 0:
+                    raise ValueError()
+
+                comma_count += 1
+                tokens = tokens[1:]
+            elif next_token.content == bracket_right:
+                return elements, tokens[1:]
+            else:
+                comma_count = 0
+                out, tokens = self.parse_expression(tokens)
+                elements.append(out)
+
+    def parse_set(self, tokens):
+        elements, tokens = self.parse_list(tokens, "{", "}", ",")
+        return self.expr_factory.Set(elements), tokens
+
+    def parse_Tuple(self, tokens):
+        elements, tokens = self.parse_list(tokens, "<", ">", ",")
+        return self.expr_factory.Tuple(elements), tokens
+
+    def parse_function_call(self, tokens):
+        identifier, tokens = self.parse_qualified(tokens)
 
         if identifier.names[-1] == "P":
-            expressions, tokens = ParsingUtils.parse_list(tokens, "(", ")", ",", ExpressionParser.parse_expression)
+            expressions, tokens = self.parse_list(tokens, "(", ")", ",")
             if len(expressions) != 1 or len(identifier.names) != 1:
                 raise ValueError("Too many parameters in power set")
-            return Power(expressions[0]), tokens
+            return self.expr_factory.Power(expressions[0]), tokens
 
-        expressions, tokens = ParsingUtils.parse_list(tokens, "(", ")", ",", ExpressionParser.parse_expression)
-        return FunctionCall(identifier, expressions), tokens
+        expressions, tokens = self.parse_list(tokens, "(", ")", ",")
+        return self.expr_factory.FunctionCall(identifier, expressions), tokens
 
-    @staticmethod
-    def parse_parentheses(tokens):
+    def parse_parentheses(self, tokens):
         token_open = tokens[0]
-        expression, tokens = ExpressionParser.parse_expression(tokens[1:])
+        expression, tokens = self.parse_expression(tokens[1:])
         token_close = tokens[0]
 
         return expression, tokens[1:]
 
-
-    @staticmethod
-    def parse_big_union(tokens):
+    def parse_big_union(self, tokens):
         symbol = tokens[0]
-        expr, tokens = ExpressionParser.parse_expression(tokens[1:])
-        return BigUnion(expr), tokens
+        expr, tokens = self.parse_expression(tokens[1:])
+        return self.expr_factory.BigUnion(expr), tokens
 
-    @staticmethod
-    def parse_big_intersection(tokens):
+    def parse_big_intersection(self, tokens):
         symbol = tokens[0]
-        expr, tokens = ExpressionParser.parse_expression(tokens[1:])
-        return BigIntersection(expr), tokens
+        expr, tokens = self.parse_expression(tokens[1:])
+        return self.expr_factory.BigIntersection(expr), tokens
 
-    @staticmethod
-    def parse_expression(tokens):
+    def parse_expression(self, tokens):
         next_token = tokens[0]
 
         if next_token.content == "{":
-            lhs, tokens = ExpressionParser.parse_set(tokens)
+            lhs, tokens = self.parse_set(tokens)
         elif next_token.content == "<":
-            lhs, tokens = ExpressionParser.parse_Tuple(tokens)
+            lhs, tokens = self.parse_Tuple(tokens)
         elif next_token.content == "(":
-            lhs, tokens = ExpressionParser.parse_parentheses(tokens)
+            lhs, tokens = self.parse_parentheses(tokens)
         elif next_token.type == "Identifier":
-            qualified, q_tokens = ExpressionParser.parse_qualified(tokens)
+            qualified, q_tokens = self.parse_qualified(tokens)
             next_token = q_tokens[0]
             if next_token.content == "(":
-                lhs, tokens = ExpressionParser.parse_function_call(tokens)
+                lhs, tokens = self.parse_function_call(tokens)
             else:
-                lhs, tokens = ExpressionParser.parse_qualified(tokens)
+                lhs, tokens = self.parse_qualified(tokens)
         elif next_token.type == "Number":
-            lhs = Number(int(next_token.content))
+            lhs = self.expr_factory.Number(int(next_token.content))
             tokens = tokens[1:]
         elif next_token.content == "&&":
-            expr, tokens = ExpressionParser.parse_big_intersection(tokens)
+            expr, tokens = self.parse_big_intersection(tokens)
             return expr, tokens
         elif next_token.content == "||":
-            expr, tokens = ExpressionParser.parse_big_union(tokens)
+            expr, tokens = self.parse_big_union(tokens)
             return expr, tokens
         else:
             raise ValueError(f"Unknown expression {next_token}")
@@ -93,34 +97,33 @@ class ExpressionParser:
         next_token = tokens[0]
         if next_token.content == "|":
             tokens = tokens[1:]
-            rhs, tokens = ExpressionParser.parse_expression(tokens)
-            return Union(lhs, rhs), tokens
+            rhs, tokens = self.parse_expression(tokens)
+            return self.expr_factory.Union(lhs, rhs), tokens
         elif next_token.content == "&":
             tokens = tokens[1:]
-            rhs, tokens = ExpressionParser.parse_expression(tokens)
-            return Intersection(lhs, rhs), tokens
+            rhs, tokens = self.parse_expression(tokens)
+            return self.expr_factory.Intersection(lhs, rhs), tokens
         elif next_token.content == "-":
             tokens = tokens[1:]
-            rhs, tokens = ExpressionParser.parse_expression(tokens)
-            return Difference(lhs, rhs), tokens
+            rhs, tokens = self.parse_expression(tokens)
+            return self.expr_factory.Difference(lhs, rhs), tokens
         elif next_token.content == "==":
             tokens = tokens[1:]
-            rhs, tokens = ExpressionParser.parse_expression(tokens)
-            return Equality(lhs, rhs), tokens
+            rhs, tokens = self.parse_expression(tokens)
+            return self.expr_factory.Equality(lhs, rhs), tokens
         elif next_token.content == "!=":
             tokens = tokens[1:]
-            rhs, tokens = ExpressionParser.parse_expression(tokens)
-            return InEquality(lhs, rhs), tokens
+            rhs, tokens = self.parse_expression(tokens)
+            return self.expr_factory.InEquality(lhs, rhs), tokens
         elif next_token.content == "in":
             tokens = tokens[1:]
-            rhs, tokens = ExpressionParser.parse_expression(tokens)
-            return In(lhs, rhs), tokens
+            rhs, tokens = self.parse_expression(tokens)
+            return self.expr_factory.In(lhs, rhs), tokens
 
         else:
             return lhs, tokens
 
-    @staticmethod
-    def parse_qualified(tokens):
+    def parse_qualified(self, tokens):
         name_tokens = []
         while True:
             next_token = tokens[0]
@@ -133,4 +136,4 @@ class ExpressionParser:
             next_token = tokens[0]
             if next_token.content == ".":
                 tokens = tokens[1:]
-        return Qualified(name_tokens), tokens
+        return self.expr_factory.Qualified(name_tokens), tokens

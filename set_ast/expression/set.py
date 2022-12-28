@@ -13,7 +13,7 @@ class Set(Node):
             env, val = element.execute(env)
             elements.append(val)
 
-        return env, frozenset(elements)
+        return env, frozenset([])
 
     def __str__(self):
         s = "{"

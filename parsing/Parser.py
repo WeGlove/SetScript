@@ -4,11 +4,14 @@ from .StatementParser import StatementParser
 
 class Parser:
 
-    @staticmethod
-    def parse(tokens):
+    def __init__(self, factory):
+        self.factory = factory
+
+    def parse(self, tokens):
         statements = []
+        statement_parser = StatementParser(self.factory)
         while len(tokens) > 0:
-            statement, tokens = StatementParser.parse_statement(tokens)
+            statement, tokens = statement_parser.parse_statement(tokens)
             statements.append(statement)
 
         return SetAst(statements)
