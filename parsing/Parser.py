@@ -14,4 +14,4 @@ class Parser:
             statement, tokens = statement_parser.parse_statement(tokens)
             statements.append(statement)
 
-        return SetAst(statements)
+        return self.factory.get_statement_factory().SetAst(statements)

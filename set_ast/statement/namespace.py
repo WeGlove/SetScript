@@ -4,9 +4,10 @@ from set_ast.Environment import Environment
 
 class Namespace(Node):
 
-    def __init__(self, identifier, statements):
+    def __init__(self,  set_class, identifier, statements):
         self.identifier = identifier
         self.statements = statements
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         new_env = Environment()

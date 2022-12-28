@@ -4,8 +4,9 @@ from set_ast.Environment import Environment
 
 class Set(Node):
 
-    def __init__(self, elements):
+    def __init__(self,  set_class, elements):
         self.elements = elements
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         elements = []

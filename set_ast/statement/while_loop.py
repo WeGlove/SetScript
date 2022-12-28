@@ -4,9 +4,10 @@ from set_ast.Environment import Environment
 
 class WhileLoop(Node):
 
-    def __init__(self, condition, statements):
+    def __init__(self, set_class,  condition, statements):
         self.condition = condition
         self.statements = statements
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         while self.condition.execute(env)[1] == frozenset():

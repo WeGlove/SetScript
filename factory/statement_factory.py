@@ -1,6 +1,3 @@
-from abc import abstractmethod
-
-
 class StatementFactory:
 
     @staticmethod
@@ -12,7 +9,7 @@ class StatementFactory:
         pass
 
     @staticmethod
-    def ForLoop(inital, condition, inc, statements):
+    def ForLoop(initial, condition, inc, statements):
         pass
 
     @staticmethod

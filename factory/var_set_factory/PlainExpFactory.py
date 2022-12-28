@@ -16,49 +16,52 @@ from set_ast.expression.operation.binary.inequality import InEquality
 from set_ast.expression.Variable import Variable
 
 
-class PlainExpFactory(ExpressionFactory):
+class VarSetExpFactory(ExpressionFactory):
+
+    def __init__(self, set_class):
+        self.set_class = set_class
 
     def Power(self, X):
-        return Power(X)
+        return Power(self.set_class, X)
 
     def FunctionCall(self, name, expressions):
-        return FunctionCall(name, expressions)
+        return FunctionCall(self.set_class, name, expressions)
 
     def Qualified(self, names):
-        return Qualified(names)
+        return Qualified(self.set_class, names)
 
     def Variable(self, name):
-        return Variable(name)
+        return Variable(self.set_class, name)
 
     def Number(self, num):
-        return Number(num)
+        return Number(self.set_class, num)
 
     def Set(self, elements):
-        return Set(elements)
+        return Set(self.set_class, elements)
 
     def Tuple(self, elements):
-        return Tuple(elements)
+        return Tuple(self.set_class, elements)
 
     def BigUnion(self, X):
-        return BigUnion(X)
+        return BigUnion(self.set_class, X)
 
     def BigIntersection(self, X):
-        return BigIntersection
+        return BigIntersection(self.set_class, X)
 
     def Difference(self, X, Y):
-        return  Difference
+        return  Difference(self.set_class, X,Y)
 
     def Equality(self, X, Y):
-        return Equality
+        return Equality(self.set_class, X,Y)
 
     def In(self, x, X):
-        return In
+        return In(self.set_class, x,X)
 
     def InEquality(self, X, Y):
-        return InEquality
+        return InEquality(self.set_class, X,Y)
 
     def Intersection(self, X, Y):
-        return Intersection
+        return Intersection(self.set_class, X,Y)
 
     def Union(self, X, Y):
-        return Union
+        return Union(self.set_class, X, Y)

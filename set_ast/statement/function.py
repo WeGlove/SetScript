@@ -4,10 +4,11 @@ from set_ast.Environment import Environment
 
 class Function(Node):
 
-    def __init__(self, identifier, parameters, statements):
+    def __init__(self,  set_class, identifier, parameters, statements):
         self.identifier = identifier
         self.parameters = parameters
         self.statements = statements
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         env.set_value(self.identifier.name, self)

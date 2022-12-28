@@ -4,9 +4,11 @@ from set_ast.Environment import Environment
 
 class FunctionCall(Node):
 
-    def __init__(self, identifier, expressions):
+    def __init__(self,  set_class, identifier, expressions):
         self.identifier = identifier
         self.expressions = expressions
+        self.set_class = set_class
+
 
     def execute(self, env: Environment):
         scope_env = Environment()

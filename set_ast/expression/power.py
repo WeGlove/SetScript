@@ -4,8 +4,9 @@ from set_ast.Environment import Environment
 
 class Power(Node):
 
-    def __init__(self, expr):
+    def __init__(self,  set_class, expr):
         self.expr = expr
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         env, val = self.expr.execute(env)

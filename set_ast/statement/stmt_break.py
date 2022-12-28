@@ -4,8 +4,9 @@ from set_ast.Environment import Environment
 
 class StmtBreak(Node):
 
-    def __init__(self, expression):
+    def __init__(self,  set_class, expression):
         self.expression = expression
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         env, val = self.expression.execute(env)

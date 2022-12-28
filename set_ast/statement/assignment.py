@@ -4,9 +4,10 @@ from set_ast.Environment import Environment
 
 class Assignment(Node):
 
-    def __init__(self, variable, expression):
+    def __init__(self, set_class, variable, expression):
         self.variable = variable
         self.expression = expression
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         env, val = self.expression.execute(env)

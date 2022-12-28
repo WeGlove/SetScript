@@ -4,8 +4,9 @@ from set_ast.Environment import Environment
 
 class Number(Node):
 
-    def __init__(self, number):
+    def __init__(self,  set_class, number):
         self.number = number
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         res = frozenset()

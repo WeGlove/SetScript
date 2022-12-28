@@ -4,9 +4,10 @@ from set_ast.Environment import Environment
 
 class Intersection(Node):
 
-    def __init__(self, lhs, rhs):
+    def __init__(self,  set_class, lhs, rhs):
         self.lhs = lhs
         self.rhs = rhs
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         env, lhs_val = self.lhs.execute(env)

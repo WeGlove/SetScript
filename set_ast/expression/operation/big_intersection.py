@@ -4,8 +4,9 @@ from set_ast.Environment import Environment
 
 class BigIntersection(Node):
 
-    def __init__(self, expr):
+    def __init__(self,  set_class, expr):
         self.expr = expr
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         env, expr_set = self.expr.execute(env)

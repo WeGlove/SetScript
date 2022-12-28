@@ -4,11 +4,12 @@ from set_ast.Environment import Environment
 
 class ForLoop(Node):
 
-    def __init__(self, start, condition, induction, statements):
+    def __init__(self,  set_class, start, condition, induction, statements):
         self.start = start
         self.condition = condition
         self.induction = induction
         self.statements = statements
+        self.set_class = set_class
 
     def execute(self, env: Environment):
         env, _ = self.start.execute(env)
